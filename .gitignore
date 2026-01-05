@@ -1,0 +1,10 @@
+# Node dependencies
+node_modules/
+
+# Playwright outputs
+playwright-report/
+test-results/
+reports/
+
+# Environment variables
+.env
