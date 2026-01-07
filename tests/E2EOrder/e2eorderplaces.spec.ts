@@ -23,7 +23,7 @@ test('E2E Order Place',async({page})=>{
         await Home.openLogin();
         await login.loginValidUser(TestData.validUser.username, TestData.validUser.password);
 
-        await cartPage.selectephone(productsData.Phones[2]);
+       await cartPage.selectephone(productsData.Phones[2]);
        expect(await productName.getTitle()).toBe(productsData.Phones[2]);
        const alertMessage=await cartPage.Addtocard()
        expect(alertMessage).toContain('Product added');
@@ -33,6 +33,7 @@ test('E2E Order Place',async({page})=>{
        const alertMessage2=await cartPage.Addtocard()
        expect(alertMessage2).toContain('Product added');
 
+       
        await Home.openCart();
 
        await placeorder.placeorders();

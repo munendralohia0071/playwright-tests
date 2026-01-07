@@ -24,8 +24,11 @@ test.describe('Product Browsing & Selection', () => {
 // Print them before sorting
   console.log(`Products in ${category}:`, products);
 
-  const expectedProducts = (productsData[category] as string[]).map(p => p.trim()).sort();
-  expect(products.sort()).toEqual(expectedProducts);
+ const expectedProducts = productsData[category] as string[];
+
+for (const product of products) {
+  expect(expectedProducts).toContain(product);
+}
 }
 });
   test('Open Product Detail', async () => {

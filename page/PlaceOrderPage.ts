@@ -1,11 +1,11 @@
-import { Page ,Expect, expect} from '@playwright/test';
+import { Page ,expect} from '@playwright/test';
 
 export class PlaceOrder {
 
     constructor(private page:Page) {}
     private placeorder='//button[text()="Place Order"]';
     private modalTitle ='//h5[@id="orderModalLabel" and text()="Place order"]';
-    private nameInput='//input[@id="name"]';
+    private nameInput="#name";
     private countryInput='//input[@id="country"]';
     private cityInput='//input[@id="city"]';
     private cardInput='//input[@id="card"]';
@@ -17,8 +17,9 @@ export class PlaceOrder {
     private okButton = '//button[text()="OK"]';
 
      async placeorders(){
+        await this.page.reload();
         await this.page.click(this.placeorder);
-         await this.page.locator('#orderModal').waitFor({ state: 'visible' });
+        await this.page.waitForSelector('#name', { state: 'visible' });
     }
 
 async fillOrderDetails(

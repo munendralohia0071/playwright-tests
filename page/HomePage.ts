@@ -146,27 +146,10 @@ private productTitles = '#tbodyid .card-title a';
  */
 
 async clickCategory(category: 'Phones' | 'Laptops' | 'Monitors'): Promise<void> {
-  const categorySelector = `a:has-text("${category}")`;
+  await this.page.click(`a:has-text("${category}")`);
 
-  // Get first product before click
-  const firstProductLocator = this.page.locator(this.productTitles).first();
-  let previousFirst: string | null = null;
-  if ((await firstProductLocator.count()) > 0) {
-    previousFirst = (await firstProductLocator.textContent())?.trim() || null;
-  }
-
-  // Click the category
-  await this.page.click(categorySelector);
-
-  // Wait until the first visible product changes
-  await this.page.waitForFunction(
-    ({ selector, previousFirst }) => {
-      const firstEl = document.querySelector(selector);
-      const firstText = firstEl?.textContent?.trim();
-      return firstText && firstText !== previousFirst;
-    },
-    { selector: this.productTitles, previousFirst } // pass as object
-  );
+  // Wait until products are visible
+  await expect(this.page.locator(this.productTitles).first()).toBeVisible();
 }
 
 /**
@@ -174,21 +157,23 @@ async clickCategory(category: 'Phones' | 'Laptops' | 'Monitors'): Promise<void> 
  */
 async getAllProducts(category: 'Phones' | 'Laptops' | 'Monitors'): Promise<string[]> {
   const allProducts = this.page.locator(this.productTitles);
+
+  // ✅ Wait until at least one product is visible
+  await expect(allProducts.first()).toBeVisible({ timeout: 10000 });
+
   const count = await allProducts.count();
   const products: string[] = [];
 
   for (let i = 0; i < count; i++) {
-    const product = allProducts.nth(i);
-    if (await product.isVisible()) {
-      const text = (await product.textContent())?.trim();
-      if (text && (productsData[category] as string[]).includes(text)) {
-        products.push(text);
-      }
+    const text = (await allProducts.nth(i).textContent())?.trim();
+    if (text && (productsData[category] as string[]).includes(text)) {
+      products.push(text);
     }
   }
 
   return products;
 }
+
 
 /**
  * Open the first product from the current product list

@@ -39,4 +39,5 @@ export class LoginPage{
   await this.page.fill(this.passwordInput, userpaswordvalue);
   await this.page.click(this.loginbutton);
 }
+
 }
